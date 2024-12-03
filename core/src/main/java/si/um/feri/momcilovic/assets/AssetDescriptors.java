@@ -18,8 +18,8 @@ public class AssetDescriptors {
     public static final AssetDescriptor<Sound> UI_SOUND_EXPLOSION =
         new AssetDescriptor<Sound>(AssetPaths.UI_SOUND_EXPLOSION, Sound.class);
 
-    public static final AssetDescriptor<Music> UI_MUSIC =
-        new AssetDescriptor<Music>(AssetPaths.UI_MUSIC, Music.class);
+    public static final AssetDescriptor<Sound> UI_SOUND_MISS =
+        new AssetDescriptor<Sound>(AssetPaths.UI_SOUND_MISS, Sound.class);
 
     public static final AssetDescriptor<TextureAtlas> GAMEPLAY =
         new AssetDescriptor<TextureAtlas>(AssetPaths.GAMEPLAY, TextureAtlas.class);
