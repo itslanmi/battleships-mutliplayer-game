@@ -88,7 +88,7 @@ public class MenuScreen extends ScreenAdapter {
         //     }
         // });
 
-        TextButton playButton = new TextButton("Play", skin);
+        TextButton playButton = new TextButton("Play", skin, "round");
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -96,15 +96,15 @@ public class MenuScreen extends ScreenAdapter {
             }
         });
 
-        TextButton leaderboardButton = new TextButton("Leaderboard", skin);
+        TextButton leaderboardButton = new TextButton("Leaderboard", skin, "round");
         leaderboardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO
+                game.setScreen(new LeaderboardScreen(game));
             }
         });
 
-        TextButton settingsButton = new TextButton("Settings", skin);
+        TextButton settingsButton = new TextButton("Settings", skin, "round");
         settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -112,7 +112,7 @@ public class MenuScreen extends ScreenAdapter {
             }
         });
 
-        TextButton quitButton = new TextButton("Quit", skin);
+        TextButton quitButton = new TextButton("Quit", skin, "round");
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

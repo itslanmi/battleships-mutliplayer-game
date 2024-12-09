@@ -1,5 +1,7 @@
 package si.um.feri.momcilovic.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 
 import com.badlogic.gdx.ScreenAdapter;
@@ -25,7 +27,7 @@ import si.um.feri.momcilovic.config.GameConfig;
 
 public class IntroScreen extends ScreenAdapter {
 
-    public static final float INTRO_DURATION_IN_SEC = 9f;   // duration of the (intro) animation
+    public static final float INTRO_DURATION_IN_SEC = 10f;   // duration of the (intro) animation
 
     private final MomcilovicBattleshipGame game;
     private final AssetManager assetManager;
@@ -56,6 +58,7 @@ public class IntroScreen extends ScreenAdapter {
 
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
 
+        addBackground();
         animateShipsAndLogo();
     }
 
@@ -71,7 +74,7 @@ public class IntroScreen extends ScreenAdapter {
         duration += delta;
 
         // go to the MenuScreen after INTRO_DURATION_IN_SEC seconds
-        if (duration > INTRO_DURATION_IN_SEC) {
+        if (duration > INTRO_DURATION_IN_SEC || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
             game.setScreen(new MenuScreen(game));
         }
 
@@ -87,6 +90,12 @@ public class IntroScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    private void addBackground() {
+        Image background = new Image(gameplayAtlas.findRegion(RegionNames.BACKGROUND));
+        background.setSize(viewport.getWorldWidth(), viewport.getWorldHeight());
+        stage.addActor(background);
     }
 
 
@@ -132,15 +141,17 @@ public class IntroScreen extends ScreenAdapter {
     private void moveFormationAcrossScreen(Image[] ships) {
         for (Image ship : ships) {
             ship.addAction(Actions.sequence(
-                Actions.moveBy(viewport.getWorldWidth(), 0, 4f),
+                Actions.moveBy(viewport.getWorldWidth(), 0, 2f),
                 Actions.run(this::revealLogo)
             ));
         }
     }
 
 
+
     private void revealLogo() {
         stage.clear();
+        addBackground();
 
         Image logo = new Image(gameplayAtlas.findRegion(RegionNames.BATTLESHIP_LOGO));
         logo.setPosition(viewport.getWorldWidth() / 2f - logo.getWidth() / 2f,
