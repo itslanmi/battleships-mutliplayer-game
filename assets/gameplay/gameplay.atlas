@@ -6,56 +6,63 @@ filter: Nearest, Nearest
 repeat: none
 background
   rotate: false
-  xy: 2, 193
+  xy: 2, 182
   size: 800, 800
   orig: 800, 800
   offset: 0, 0
   index: -1
+battleship_logo
+  rotate: false
+  xy: 2, 2
+  size: 684, 178
+  orig: 684, 178
+  offset: 0, 0
+  index: -1
 ship_battleship
   rotate: false
-  xy: 804, 784
+  xy: 804, 582
   size: 31, 209
   orig: 31, 209
   offset: 0, 0
   index: -1
 ship_carrier
   rotate: false
-  xy: 2, 2
+  xy: 804, 793
   size: 57, 189
   orig: 57, 189
   offset: 0, 0
   index: -1
 ship_cruiser
   rotate: false
-  xy: 804, 654
+  xy: 863, 854
   size: 23, 128
   orig: 23, 128
   offset: 0, 0
   index: -1
 ship_destroyer
   rotate: false
-  xy: 837, 893
+  xy: 804, 480
   size: 20, 100
   orig: 20, 100
   offset: 0, 0
   index: -1
 ship_patrol
   rotate: false
-  xy: 804, 597
+  xy: 725, 125
   size: 13, 55
   orig: 13, 55
   offset: 0, 0
   index: -1
 ship_rescue
   rotate: false
-  xy: 98, 91
+  xy: 837, 691
   size: 17, 100
   orig: 17, 100
   offset: 0, 0
   index: -1
 ship_submarine
   rotate: false
-  xy: 61, 49
+  xy: 688, 38
   size: 35, 142
   orig: 35, 142
   offset: 0, 0

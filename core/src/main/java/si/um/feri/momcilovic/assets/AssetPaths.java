@@ -6,6 +6,7 @@ public class AssetPaths {
     public static final String UI_SOUND_EXPLOSION = "sounds/explosion.wav";
     public static final String UI_SOUND_DROP = "sounds/bomb_drop.wav";
     public static final String UI_SOUND_MISS = "sounds/miss.wav";
+    public static final String UI_SKIN = "ui_shade/skin/uiskin.json";
     public static final String GAMEPLAY = "gameplay/gameplay.atlas";
 
     private AssetPaths() {

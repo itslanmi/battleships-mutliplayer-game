@@ -4,7 +4,7 @@ public class RegionNames {
 
     // gameplay.atlas
     public static final String BACKGROUND = "background";
-
+    public static final String BATTLESHIP_LOGO = "battleship_logo";
     public static final String SHIP_BATTLESHIP = "ship_battleship";
     public static final String SHIP_CARRIER = "ship_carrier";
     public static final String SHIP_CRUISER = "ship_cruiser";

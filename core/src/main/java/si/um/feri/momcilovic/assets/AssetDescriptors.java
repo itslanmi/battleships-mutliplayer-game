@@ -21,6 +21,9 @@ public class AssetDescriptors {
     public static final AssetDescriptor<Sound> UI_SOUND_MISS =
         new AssetDescriptor<Sound>(AssetPaths.UI_SOUND_MISS, Sound.class);
 
+    public static final AssetDescriptor<Skin> UI_SKIN =
+        new AssetDescriptor<Skin>(AssetPaths.UI_SKIN, Skin.class);
+
     public static final AssetDescriptor<TextureAtlas> GAMEPLAY =
         new AssetDescriptor<TextureAtlas>(AssetPaths.GAMEPLAY, TextureAtlas.class);
 
