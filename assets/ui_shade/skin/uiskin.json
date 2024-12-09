@@ -9,9 +9,9 @@ com.badlogic.gdx.graphics.Color: {
 	black: { a: 1 }
 },
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
-	font-button: { file: font-button.fnt },
-	font-label: { file: font-label.fnt },
-	font-title: { file: font-title.fnt }
+	font-button: { file: assets/fonts/retro_gaming32.fnt },
+	font-label: { file: assets/fonts/retro_gaming32.fnt },
+	font-title: { file: assets/fonts/retro_gaming32.fnt }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: {
