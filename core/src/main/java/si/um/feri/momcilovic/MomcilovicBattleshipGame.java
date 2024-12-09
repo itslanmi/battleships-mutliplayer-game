@@ -29,6 +29,7 @@ public class MomcilovicBattleshipGame extends ApplicationAdapter {
         assetManager.load(AssetDescriptors.UI_SOUND_DROP);
         assetManager.load(AssetDescriptors.UI_SOUND_EXPLOSION);
         assetManager.load(AssetDescriptors.UI_SOUND_MISS);
+        assetManager.finishLoading();
     }
 
     @Override
