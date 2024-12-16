@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import si.um.feri.momcilovic.GameManager;
 import si.um.feri.momcilovic.MomcilovicBattleshipGame;
 import si.um.feri.momcilovic.assets.AssetDescriptors;
 import si.um.feri.momcilovic.assets.RegionNames;
@@ -35,6 +36,8 @@ public class LeaderboardScreen extends ScreenAdapter {
 
     private Skin skin;
     private TextureAtlas gameplayAtlas;
+
+    private final GameManager gameManager = new GameManager();
 
     public LeaderboardScreen(MomcilovicBattleshipGame game) {
         this.game = game;
@@ -105,11 +108,13 @@ public class LeaderboardScreen extends ScreenAdapter {
         Table leaderboardTable = new Table();
         leaderboardTable.defaults().pad(10);
 
-        for (int i = 1; i <= 15; i++) {
+        for (int i = 1; i <= gameManager.getGameResults().size(); i++) {
             Label rankLabel = new Label(i + ".", skin, "default");
 
+            //Label playerLabel = new Label(gameManager.getGameResults().get(i).getPlayer1(), skin, "default");
             Label playerLabel = new Label("Player " + i, skin, "default");
 
+            //Label scoreLabel = new Label(Integer.toString(gameManager.getGameResults().get(i).getScore1()), skin, "default");
             Label scoreLabel = new Label("Score", skin, "default");
 
             leaderboardTable.add(rankLabel).left().padRight(10);

@@ -25,11 +25,13 @@ public class MomcilovicBattleshipGame extends Game {
 
     private AssetManager assetManager;
 
+    private GameManager gameManager;
+
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
         batch = new SpriteBatch();
-
+        gameManager = new GameManager();
 
         assetManager = new AssetManager();
         assetManager.getLogger().setLevel(Logger.DEBUG);
@@ -42,6 +44,9 @@ public class MomcilovicBattleshipGame extends Game {
         assetManager.finishLoading();
 
         explosionSound = assetManager.get(AssetPaths.UI_SOUND_EXPLOSION, Sound.class);
+
+        gameManager.saveResult("test", 1000,"test2",2000, false);
+        gameManager.saveResult("aas", 1111,"asd",2222, false);
 
         setScreen(new IntroScreen(this));
     }

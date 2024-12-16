@@ -1,4 +1,4 @@
-package si.um.feri.momcilovic.manager;
+package si.um.feri.momcilovic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -60,6 +60,14 @@ public class GameManager {
             this.player2 = player2;
             this.score2 = score2;
             this.isSinglePlayer = isSinglePlayer;
+        }
+
+        public String getPlayer1() {
+            return player1;
+        }
+
+        public int getScore1() {
+            return score1;
         }
     }
 }
