@@ -21,6 +21,7 @@ gradle-app.setting
 *.ear
 hs_err_pid*
 .attach_pid*
+game_results.json
 
 ## Android:
 /android/libs/armeabi-v7a/
