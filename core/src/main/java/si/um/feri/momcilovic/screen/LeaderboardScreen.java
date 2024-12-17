@@ -30,6 +30,7 @@ public class LeaderboardScreen extends ScreenAdapter {
 
     private final MomcilovicBattleshipGame game;
     private final AssetManager assetManager;
+    private final GameManager gameManager;
 
     private Viewport viewport;
     private Stage stage;
@@ -37,11 +38,11 @@ public class LeaderboardScreen extends ScreenAdapter {
     private Skin skin;
     private TextureAtlas gameplayAtlas;
 
-    private final GameManager gameManager = new GameManager();
 
     public LeaderboardScreen(MomcilovicBattleshipGame game) {
         this.game = game;
         assetManager = game.getAssetManager();
+        gameManager = game.getGameManager();
     }
 
     @Override
@@ -108,14 +109,12 @@ public class LeaderboardScreen extends ScreenAdapter {
         Table leaderboardTable = new Table();
         leaderboardTable.defaults().pad(10);
 
-        for (int i = 1; i <= gameManager.getGameResults().size(); i++) {
-            Label rankLabel = new Label(i + ".", skin, "default");
+        for (int i = 0; i < gameManager.getGameResults().size(); i++) {
+            Label rankLabel = new Label(i + 1 + ".", skin, "default");
 
-            //Label playerLabel = new Label(gameManager.getGameResults().get(i).getPlayer1(), skin, "default");
-            Label playerLabel = new Label("Player " + i, skin, "default");
+            Label playerLabel = new Label(gameManager.getGameResults().get(i).getPlayer1(), skin, "default");
 
-            //Label scoreLabel = new Label(Integer.toString(gameManager.getGameResults().get(i).getScore1()), skin, "default");
-            Label scoreLabel = new Label("Score", skin, "default");
+            Label scoreLabel = new Label(Integer.toString(gameManager.getGameResults().get(i).getScore1()), skin, "default");
 
             leaderboardTable.add(rankLabel).left().padRight(10);
             leaderboardTable.add(playerLabel).expandX().fillX().padRight(10);

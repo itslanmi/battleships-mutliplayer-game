@@ -62,6 +62,10 @@ public class MomcilovicBattleshipGame extends Game {
         return assetManager;
     }
 
+    public GameManager getGameManager() {
+        return gameManager;
+    }
+
     public SpriteBatch getBatch() {
         return batch;
     }
