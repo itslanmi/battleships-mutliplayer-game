@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -46,7 +47,7 @@ public class IntroScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        viewport = new FitViewport(GameConfig.HUD_WIDTH, GameConfig.HUD_HEIGHT);
+        viewport = new FillViewport(GameConfig.HUD_WIDTH, GameConfig.HUD_HEIGHT);
         stage = new Stage(viewport, game.getBatch());
 
         // load assets
@@ -69,7 +70,7 @@ public class IntroScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(65 / 255f, 159 / 255f, 221 / 255f, 0f);
+        ScreenUtils.clear(0f, 0f, 0f, 0f);
 
         duration += delta;
 

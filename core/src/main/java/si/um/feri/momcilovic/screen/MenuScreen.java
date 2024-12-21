@@ -8,12 +8,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -40,7 +42,7 @@ public class MenuScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        viewport = new FitViewport(GameConfig.HUD_WIDTH, GameConfig.HUD_HEIGHT);
+        viewport = new FillViewport(GameConfig.HUD_WIDTH, GameConfig.HUD_HEIGHT);
         stage = new Stage(viewport, game.getBatch());
 
         skin = assetManager.get(AssetDescriptors.UI_SKIN);
@@ -123,10 +125,9 @@ public class MenuScreen extends ScreenAdapter {
         Table buttonTable = new Table();
         buttonTable.defaults().padLeft(30).padRight(30);
 
-        TextureRegion menuBackgroundRegion = gameplayAtlas.findRegion(RegionNames.BACKGROUND);
-        //buttonTable.setBackground(new TextureRegionDrawable(menuBackgroundRegion));
+        TextureRegion logoRegion = gameplayAtlas.findRegion(RegionNames.BATTLESHIP_LOGO);
+        Image logoImage = new Image(new TextureRegionDrawable(logoRegion));
 
-        // buttonTable.add(introButton).padBottom(15).expandX().fillX().row();
         buttonTable.add(playButton).padBottom(15).expandX().fill().row();
         buttonTable.add(leaderboardButton).padBottom(15).fillX().row();
         buttonTable.add(settingsButton).padBottom(15).fillX().row();
@@ -134,6 +135,7 @@ public class MenuScreen extends ScreenAdapter {
 
         buttonTable.center();
 
+        table.add(logoImage).padBottom(20).row();
         table.add(buttonTable);
         table.center();
         table.setFillParent(true);

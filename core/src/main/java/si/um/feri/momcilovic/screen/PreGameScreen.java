@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import si.um.feri.momcilovic.MomcilovicBattleshipGame;
@@ -39,6 +39,9 @@ public class PreGameScreen extends ScreenAdapter {
     private Skin skin;
     private TextureAtlas gameplayAtlas;
 
+    private TextField player1Name;
+    private TextField player2Name;
+
     public PreGameScreen(MomcilovicBattleshipGame game) {
         this.game = game;
         assetManager = game.getAssetManager();
@@ -46,7 +49,7 @@ public class PreGameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        viewport = new FitViewport(GameConfig.HUD_WIDTH, GameConfig.HUD_HEIGHT);
+        viewport = new FillViewport(GameConfig.HUD_WIDTH, GameConfig.HUD_HEIGHT);
         stage = new Stage(viewport, game.getBatch());
 
         skin = assetManager.get(AssetDescriptors.UI_SKIN);
@@ -94,19 +97,24 @@ public class PreGameScreen extends ScreenAdapter {
 
         if (isMultiplayer) {
             Label playerNameLabel = new Label("Player Name:", skin);
-            TextField playerNameField = new TextField("", skin);
+            player1Name = new TextField("", skin);
             table.add(playerNameLabel).left().padBottom(15).row();
-            table.add(playerNameField).fillX().padBottom(15).row();
+            table.add(player1Name).fillX().padBottom(15).row();
+
+
         } else {
             Label player1NameLabel = new Label("Player 1 Name:", skin);
-            TextField player1NameField = new TextField("", skin);
+            player1Name = new TextField("", skin);
             Label player2NameLabel = new Label("Player 2 Name:", skin);
-            TextField player2NameField = new TextField("", skin);
+            player2Name = new TextField("", skin);
             table.add(player1NameLabel).left().padBottom(15).row();
-            table.add(player1NameField).fillX().padBottom(15).row();
+            table.add(player1Name).fillX().padBottom(15).row();
             table.add(player2NameLabel).left().padBottom(15).row();
-            table.add(player2NameField).fillX().padBottom(15).row();
+            table.add(player2Name).fillX().padBottom(15).row();
+
         }
+
+
 
         Table buttonTable = new Table();
         TextButton backButton = new TextButton("Back", skin, "round");
@@ -122,7 +130,9 @@ public class PreGameScreen extends ScreenAdapter {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // game.setScreen(new GameScreen(game));
+                System.out.println("Starting game with players: " + player1Name + " and " + player2Name);
+                game.getGameManager().saveResult(player1Name.getText(), 0, player2Name.getText(), 0,isMultiplayer);
+                game.setScreen(new GameScreen(game));
             }
         });
         buttonTable.add(startButton).padLeft(10);

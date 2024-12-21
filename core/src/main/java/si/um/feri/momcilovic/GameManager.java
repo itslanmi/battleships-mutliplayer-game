@@ -43,6 +43,10 @@ public class GameManager {
         return gameResults;
     }
 
+    public GameResult getGameResult(int index) {
+        return gameResults.get(index);
+    }
+
     public static class GameResult {
         public String player1;
         public int score1;
@@ -62,12 +66,20 @@ public class GameManager {
             this.isSinglePlayer = isSinglePlayer;
         }
 
-        public String getPlayer1() {
-            return player1;
+        public String getPlayer(int player) {
+            if(player == 1) {
+                return player1;
+            } else {
+                return player2;
+            }
         }
 
-        public int getScore1() {
-            return score1;
+        public int getScore(int score) {
+            if(score==1) {
+                return score1;
+            } else {
+                return score2;
+            }
         }
     }
 }

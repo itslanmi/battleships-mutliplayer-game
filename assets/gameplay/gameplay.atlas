@@ -18,52 +18,100 @@ battleship_logo
   orig: 684, 178
   offset: 0, 0
   index: -1
+grid_battleship
+  rotate: false
+  xy: 688, 116
+  size: 320, 64
+  orig: 320, 64
+  offset: 0, 0
+  index: -1
+grid_cruiser
+  rotate: false
+  xy: 688, 50
+  size: 256, 64
+  orig: 256, 64
+  offset: 0, 0
+  index: -1
+grid_destroyer
+  rotate: false
+  xy: 804, 918
+  size: 192, 64
+  orig: 192, 64
+  offset: 0, 0
+  index: -1
+grid_patrol
+  rotate: false
+  xy: 863, 786
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+grid_submarine
+  rotate: false
+  xy: 804, 852
+  size: 192, 64
+  orig: 192, 64
+  offset: 0, 0
+  index: -1
 ship_battleship
   rotate: false
-  xy: 804, 582
+  xy: 804, 450
   size: 31, 209
   orig: 31, 209
   offset: 0, 0
   index: -1
 ship_carrier
   rotate: false
-  xy: 804, 793
+  xy: 804, 661
   size: 57, 189
   orig: 57, 189
   offset: 0, 0
   index: -1
 ship_cruiser
   rotate: false
-  xy: 863, 854
+  xy: 998, 854
   size: 23, 128
   orig: 23, 128
   offset: 0, 0
   index: -1
 ship_destroyer
   rotate: false
-  xy: 804, 480
+  xy: 863, 684
   size: 20, 100
   orig: 20, 100
   offset: 0, 0
   index: -1
 ship_patrol
   rotate: false
-  xy: 725, 125
+  xy: 946, 59
   size: 13, 55
   orig: 13, 55
   offset: 0, 0
   index: -1
 ship_rescue
   rotate: false
-  xy: 837, 691
+  xy: 804, 204
   size: 17, 100
   orig: 17, 100
   offset: 0, 0
   index: -1
 ship_submarine
   rotate: false
-  xy: 688, 38
+  xy: 804, 306
   size: 35, 142
   orig: 35, 142
+  offset: 0, 0
+  index: -1
+
+gameplay2.png
+size: 1024, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+grid
+  rotate: false
+  xy: 2, 2
+  size: 704, 704
+  orig: 704, 704
   offset: 0, 0
   index: -1

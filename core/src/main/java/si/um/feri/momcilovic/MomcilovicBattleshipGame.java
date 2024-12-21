@@ -45,8 +45,8 @@ public class MomcilovicBattleshipGame extends Game {
 
         explosionSound = assetManager.get(AssetPaths.UI_SOUND_EXPLOSION, Sound.class);
 
-        gameManager.saveResult("test", 1000,"test2",2000, false);
-        gameManager.saveResult("aas", 1111,"asd",2222, false);
+        //gameManager.saveResult("test", 1000,"test2",2000, false);
+        //gameManager.saveResult("aas", 1111,"asd",2222, false);
 
         setScreen(new IntroScreen(this));
     }

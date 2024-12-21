@@ -13,6 +13,13 @@ public class RegionNames {
     public static final String SHIP_RESCUE = "ship_rescue";
     public static final String SHIP_SUBMARINE = "ship_submarine";
 
+    public static final String GRID = "grid";
+    public static final String GRID_BATTLESHIP = "grid_battleship";
+    public static final String GRID_CRUISER = "grid_cruiser";
+    public static final String GRID_DESTROYER = "grid_destroyer";
+    public static final String GRID_PATROL = "grid_patrol";
+    public static final String GRID_SUBMARINE = "grid_submarine";
+
     private RegionNames() {
     }
 }
