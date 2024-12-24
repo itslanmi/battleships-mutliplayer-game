@@ -146,7 +146,7 @@ public class SettingsScreen extends ScreenAdapter {
         Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
         mainMenuMusicCheckbox.setChecked(prefs.getBoolean(MAIN_MENU_MUSIC_KEY, true));
         gameplayMusicCheckbox.setChecked(prefs.getBoolean(GAMEPLAY_MUSIC_KEY, true));
-        moveTimeSelectBox.setSelected(prefs.getString(MOVE_TIME_KEY, "30 seconds"));
+        moveTimeSelectBox.setSelected(prefs.getString(MOVE_TIME_KEY, "MEDIUM (30s)"));
         multiplayerCheckbox.setChecked(prefs.getBoolean(MULTIPLAYER_KEY, false));
     }
 }
