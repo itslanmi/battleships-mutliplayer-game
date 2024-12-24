@@ -39,6 +39,20 @@ grid_destroyer
   orig: 192, 64
   offset: 0, 0
   index: -1
+grid_hit
+  rotate: false
+  xy: 863, 720
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+grid_miss
+  rotate: false
+  xy: 946, 50
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 grid_patrol
   rotate: false
   xy: 863, 786
@@ -76,21 +90,21 @@ ship_cruiser
   index: -1
 ship_destroyer
   rotate: false
-  xy: 863, 684
+  xy: 804, 204
   size: 20, 100
   orig: 20, 100
   offset: 0, 0
   index: -1
 ship_patrol
   rotate: false
-  xy: 946, 59
+  xy: 863, 663
   size: 13, 55
   orig: 13, 55
   offset: 0, 0
   index: -1
 ship_rescue
   rotate: false
-  xy: 804, 204
+  xy: 837, 559
   size: 17, 100
   orig: 17, 100
   offset: 0, 0

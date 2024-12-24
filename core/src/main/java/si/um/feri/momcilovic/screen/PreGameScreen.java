@@ -132,7 +132,7 @@ public class PreGameScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Starting game with players: " + player1Name + " and " + player2Name);
                 game.getGameManager().saveResult(player1Name.getText(), 0, player2Name.getText(), 0,isMultiplayer);
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new GameSetupScreen(game));
             }
         });
         buttonTable.add(startButton).padLeft(10);

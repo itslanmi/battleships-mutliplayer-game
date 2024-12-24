@@ -19,6 +19,8 @@ public class RegionNames {
     public static final String GRID_DESTROYER = "grid_destroyer";
     public static final String GRID_PATROL = "grid_patrol";
     public static final String GRID_SUBMARINE = "grid_submarine";
+    public static final String GRID_MISS = "grid_miss";
+    public static final String GRID_HIT = "grid_hit";
 
     private RegionNames() {
     }
