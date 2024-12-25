@@ -190,7 +190,7 @@ public class GameSetupScreen extends ScreenAdapter {
                     System.out.println(e.getMessage());
                 }
             if(entersPressed == 10){
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new GameScreen(game,player1Matrix,player2Matrix));
             }
         }
 

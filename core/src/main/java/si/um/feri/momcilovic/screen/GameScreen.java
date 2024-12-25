@@ -5,9 +5,12 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -17,6 +20,7 @@ import java.sql.Time;
 import si.um.feri.momcilovic.GameManager;
 import si.um.feri.momcilovic.MomcilovicBattleshipGame;
 import si.um.feri.momcilovic.assets.AssetDescriptors;
+import si.um.feri.momcilovic.assets.RegionNames;
 import si.um.feri.momcilovic.config.GameConfig;
 
 public class GameScreen extends ScreenAdapter {
@@ -36,16 +40,24 @@ public class GameScreen extends ScreenAdapter {
     private int currentPlayer = 1;
     private String[] players;
 
+    private int[][] player1Matrix = new int[10][10];
+    private int[][] player2Matrix = new int[10][10];
+
+    private boolean[][] player1GridState = new boolean[10][10];
+    private boolean[][] player2GridState = new boolean[10][10];
+
     private Label playerNameLabel;
     private Label timerLabel;
     private float timer;
     private float turnDuration;
     private String turnDurationString;
 
-    public GameScreen(MomcilovicBattleshipGame game) {
+    public GameScreen(MomcilovicBattleshipGame game, int player1[][], int player2[][]) {
         this.game = game;
         assetManager = game.getAssetManager();
         gameManager = game.getGameManager();
+        player1Matrix = player1;
+        player2Matrix = player2;
     }
 
     @Override
@@ -95,20 +107,77 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
+
     private void switchTurn() {
         currentPlayer = 3 - currentPlayer; // Switch player
         timer = turnDuration;
+        updateGridImages();
+    }
+    private void updateGridImages() {
+        stage.clear();
+        createUi();
     }
 
     private void updateUi() {
-        playerNameLabel.setText("Player: " + players[currentPlayer - 1]);
-        timerLabel.setText("Time remaining: " + (int) timer + "s");
+        playerNameLabel.setText(players[currentPlayer - 1]);
+        timerLabel.setText("Time: " + (int) timer + "s");
     }
 
     private void createUi() {
+        // Add background image
+        Image backgroundImage = new Image(gameplayAtlas.findRegion(RegionNames.BACKGROUND));
+        backgroundImage.setFillParent(true);
+        stage.addActor(backgroundImage);
+
+        // Add a specific image at certain coordinates
+        Image specificImage = new Image(gameplayAtlas.findRegion(RegionNames.GRID));
+        specificImage.setPosition(4 * GameConfig.CELL_SIZE, 2 * GameConfig.CELL_SIZE); // Set the desired coordinates
+        stage.addActor(specificImage);
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                Image gridImage;
+                if (currentPlayer == 1) {
+                    if (player2Matrix[i][j] == 1) {
+                        gridImage = new Image(gameplayAtlas.findRegion(RegionNames.GRID_HIT));
+                    } else {
+                        gridImage = new Image(gameplayAtlas.findRegion(RegionNames.GRID_MISS));
+                    }
+                } else {
+                    if (player1Matrix[i][j] == 1) {
+                        gridImage = new Image(gameplayAtlas.findRegion(RegionNames.GRID_HIT));
+                    } else {
+                        gridImage = new Image(gameplayAtlas.findRegion(RegionNames.GRID_MISS));
+                    }
+                }
+                gridImage.setPosition((5 + j) * GameConfig.CELL_SIZE, (11 - i) * GameConfig.CELL_SIZE);
+                if ((currentPlayer == 1 && player2GridState[i][j]) || (currentPlayer == 2 && player1GridState[i][j])) {
+                    gridImage.getColor().a = 1; // Set alpha to 1 (100%) if previously opened
+                } else {
+                    gridImage.getColor().a = 0; // Set initial alpha to 0
+                }
+                int finalI = i;
+                int finalJ = j;
+                gridImage.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        gridImage.getColor().a = 1; // Set alpha to 1 (100%) on click
+                        if (currentPlayer == 1) {
+                            player2GridState[finalI][finalJ] = true;
+                        } else {
+                            player1GridState[finalI][finalJ] = true;
+                        }
+                        System.out.println(gridImage.getName());
+                    }
+                });
+                stage.addActor(gridImage);
+            }
+        }
+
+
         // Create and position player name label
-        playerNameLabel = new Label("Player: " + players[currentPlayer - 1], skin, "title");
-        playerNameLabel.setPosition(20, GameConfig.HUD_HEIGHT - 40);
+        playerNameLabel = new Label(players[currentPlayer - 1], skin, "title");
+        playerNameLabel.setPosition(10 * GameConfig.CELL_SIZE, GameConfig.HUD_HEIGHT - GameConfig.CELL_SIZE);
         stage.addActor(playerNameLabel);
 
         // Create and position timer label
