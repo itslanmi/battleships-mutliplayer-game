@@ -40,7 +40,7 @@ public class GameSetupScreen extends ScreenAdapter {
     private int selectedCol = 0;
     private boolean isHorizontal = true;
     private int currentPlayer = 1;
-    private String[] players;
+    private final String[] players;
 
     private Image[] boatImages;
     private final String[] boats = {RegionNames.GRID_BATTLESHIP, RegionNames.GRID_CRUISER, RegionNames.GRID_DESTROYER, RegionNames.GRID_SUBMARINE, RegionNames.GRID_PATROL};
@@ -61,10 +61,11 @@ public class GameSetupScreen extends ScreenAdapter {
     private Label orientationLabel;
 
 
-    public GameSetupScreen(MomcilovicBattleshipGame game) {
+    public GameSetupScreen(MomcilovicBattleshipGame game, String[] playersNames) {
         this.game = game;
         assetManager = game.getAssetManager();
         gameManager = game.getGameManager();
+        players = playersNames;
     }
 
     @Override
@@ -78,9 +79,9 @@ public class GameSetupScreen extends ScreenAdapter {
         boatImages = new Image[boats.length];
         for (int i = 0; i < boats.length; i++) {
             boatImages[i] = new Image(new TextureRegionDrawable(gameplayAtlas.findRegion(boats[i])));
-            boatImages[i].setPosition( 0, -64);
+            boatImages[i].setPosition(0, -64);
         }
-        boatImages[0].setPosition(5*64, 11*64);
+        boatImages[0].setPosition(5 * 64, 11 * 64);
 
         for (int[] matrix : player1Matrix) {
             Arrays.fill(matrix, 0);
@@ -88,9 +89,6 @@ public class GameSetupScreen extends ScreenAdapter {
         for (int[] matrix : player2Matrix) {
             Arrays.fill(matrix, 0);
         }
-
-        players = new String[] {gameManager.getGameResult(gameManager.getGameResults().size()-1).getPlayer(1),
-            gameManager.getGameResult(gameManager.getGameResults().size()-1).getPlayer(2)};
 
         createUi();
         Gdx.input.setInputProcessor(stage);
@@ -106,26 +104,26 @@ public class GameSetupScreen extends ScreenAdapter {
         stage.draw();
     }
 
-    private void changeLimits(){
-        if(isHorizontal){
+    private void changeLimits() {
+        if (isHorizontal) {
             minRow = 2;
             maxRow = 11;
             minCol = 5;
-            maxCol = 15 - (int) (boatImages[currentBoatIndex].getWidth()/64);
-        }else {
-            minRow = 2 + (int) (boatImages[currentBoatIndex].getWidth()/64);
+            maxCol = 15 - (int) (boatImages[currentBoatIndex].getWidth() / 64);
+        } else {
+            minRow = 2 + (int) (boatImages[currentBoatIndex].getWidth() / 64);
             maxRow = 12;
             minCol = 5;
             maxCol = 14;
         }
     }
 
-    private void setupBoats(){
-        for(Image boatImage : boatImages){
+    private void setupBoats() {
+        for (Image boatImage : boatImages) {
             boatImage.setPosition(0, -64);
             boatImage.setRotation(0);
         }
-        boatImages[0].setPosition(5*64, 11*64);
+        boatImages[0].setPosition(5 * 64, 11 * 64);
     }
 
     private void handleInput() {
@@ -133,17 +131,17 @@ public class GameSetupScreen extends ScreenAdapter {
         float cellSize = GameConfig.CELL_SIZE;
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            if(boatImages[currentBoatIndex].getY() < maxRow*cellSize){
+            if (boatImages[currentBoatIndex].getY() < maxRow * cellSize) {
                 boatImages[currentBoatIndex].setPosition(boatImages[currentBoatIndex].getX(), boatImages[currentBoatIndex].getY() + cellSize);
                 selectedRow--;
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            if(boatImages[currentBoatIndex].getY() > minRow*cellSize){
+            if (boatImages[currentBoatIndex].getY() > minRow * cellSize) {
                 boatImages[currentBoatIndex].setPosition(boatImages[currentBoatIndex].getX(), boatImages[currentBoatIndex].getY() - cellSize);
                 selectedRow++;
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            if (boatImages[currentBoatIndex].getX() > minCol*cellSize) {
+            if (boatImages[currentBoatIndex].getX() > minCol * cellSize) {
                 boatImages[currentBoatIndex].setPosition(boatImages[currentBoatIndex].getX() - cellSize, boatImages[currentBoatIndex].getY());
                 selectedCol--;
             }
@@ -154,52 +152,52 @@ public class GameSetupScreen extends ScreenAdapter {
             }
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.R)){
-            if(boatImages[currentBoatIndex].getRotation() == 0){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            if (boatImages[currentBoatIndex].getRotation() == 0) {
                 boatImages[currentBoatIndex].rotateBy(-90);
-                if(boatImages[currentBoatIndex].getY() - boatImages[currentBoatIndex].getImageWidth() < minRow*cellSize){
-                    boatImages[currentBoatIndex].setPosition(boatImages[currentBoatIndex].getX(), minRow*cellSize+boatImages[currentBoatIndex].getImageWidth());
-                }else {
-                    boatImages[currentBoatIndex].setPosition(boatImages[currentBoatIndex].getX(), boatImages[currentBoatIndex].getY()+cellSize);
-                }
-            }else {
-                boatImages[currentBoatIndex].rotateBy(90);
-                if(boatImages[currentBoatIndex].getX() + boatImages[currentBoatIndex].getImageWidth() > maxCol*cellSize){
-                    boatImages[currentBoatIndex].setPosition(maxCol*cellSize-boatImages[currentBoatIndex].getImageWidth()+cellSize, boatImages[currentBoatIndex].getY()-cellSize);
+                if (boatImages[currentBoatIndex].getY() - boatImages[currentBoatIndex].getImageWidth() < minRow * cellSize) {
+                    boatImages[currentBoatIndex].setPosition(boatImages[currentBoatIndex].getX(), minRow * cellSize + boatImages[currentBoatIndex].getImageWidth());
                 } else {
-                    boatImages[currentBoatIndex].setPosition(boatImages[currentBoatIndex].getX(), boatImages[currentBoatIndex].getY()-cellSize);
+                    boatImages[currentBoatIndex].setPosition(boatImages[currentBoatIndex].getX(), boatImages[currentBoatIndex].getY() + cellSize);
+                }
+            } else {
+                boatImages[currentBoatIndex].rotateBy(90);
+                if (boatImages[currentBoatIndex].getX() + boatImages[currentBoatIndex].getImageWidth() > maxCol * cellSize) {
+                    boatImages[currentBoatIndex].setPosition(maxCol * cellSize - boatImages[currentBoatIndex].getImageWidth() + cellSize, boatImages[currentBoatIndex].getY() - cellSize);
+                } else {
+                    boatImages[currentBoatIndex].setPosition(boatImages[currentBoatIndex].getX(), boatImages[currentBoatIndex].getY() - cellSize);
                 }
             }
             isHorizontal = !isHorizontal;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-                try {
-                    if (currentPlayer == 1) {
-                        placeBoatInMatrix(player1Matrix, selectedRow, selectedCol, isHorizontal, (int) (boatImages[currentBoatIndex].getImageWidth() / GameConfig.CELL_SIZE));
-                    } else {
-                        placeBoatInMatrix(player2Matrix, selectedRow, selectedCol, isHorizontal, (int) (boatImages[currentBoatIndex].getImageWidth() / GameConfig.CELL_SIZE));
-                    }
-                    entersPressed++;
-                    placeBoat();
-                    isHorizontal = true;
-                    selectedCol = 0;
-                    selectedRow = 0;
-                    changeLimits();
-                    boatImages[currentBoatIndex].setPosition(minCol * cellSize, maxRow * cellSize);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
+            try {
+                if (currentPlayer == 1) {
+                    placeBoatInMatrix(player1Matrix, selectedRow, selectedCol, isHorizontal, (int) (boatImages[currentBoatIndex].getImageWidth() / GameConfig.CELL_SIZE));
+                } else {
+                    placeBoatInMatrix(player2Matrix, selectedRow, selectedCol, isHorizontal, (int) (boatImages[currentBoatIndex].getImageWidth() / GameConfig.CELL_SIZE));
                 }
-            if(entersPressed == 10){
-                game.setScreen(new GameScreen(game,player1Matrix,player2Matrix));
+                entersPressed++;
+                placeBoat();
+                isHorizontal = true;
+                selectedCol = 0;
+                selectedRow = 0;
+                changeLimits();
+                boatImages[currentBoatIndex].setPosition(minCol * cellSize, maxRow * cellSize);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            if (entersPressed == 10) {
+                game.setScreen(new GameScreen(game, players, player1Matrix, player2Matrix));
             }
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             for (int[] matrix : player1Matrix) {
                 System.out.println(Arrays.toString(matrix));
             }
         }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
             for (int[] matrix : player2Matrix) {
                 System.out.println(Arrays.toString(matrix));
             }
@@ -220,7 +218,7 @@ public class GameSetupScreen extends ScreenAdapter {
     public void placeBoatInMatrix(int[][] matrix, int selectedRow, int selectedCol, boolean isHorizontal, int boatSize) throws Exception {
         if (isHorizontal) {
             for (int i = 0; i < boatSize; i++) {
-                if(matrix[selectedRow][selectedCol + i] == 1){
+                if (matrix[selectedRow][selectedCol + i] == 1) {
                     throw new Exception("Invalid placement");
                 }
             }
@@ -257,7 +255,7 @@ public class GameSetupScreen extends ScreenAdapter {
         stage.addActor(specificImage);
 
 
-        for(Image boatImage : boatImages){
+        for (Image boatImage : boatImages) {
             stage.addActor(boatImage);
         }
 

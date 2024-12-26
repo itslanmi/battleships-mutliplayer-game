@@ -1,7 +1,6 @@
 package si.um.feri.momcilovic.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -9,15 +8,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import si.um.feri.momcilovic.MomcilovicBattleshipGame;
@@ -25,10 +24,7 @@ import si.um.feri.momcilovic.assets.AssetDescriptors;
 import si.um.feri.momcilovic.assets.RegionNames;
 import si.um.feri.momcilovic.config.GameConfig;
 
-public class PreGameScreen extends ScreenAdapter {
-
-    private static final String PREFS_NAME = "settingsPreferences";
-    private static final String MULTIPLAYER_KEY = "multiplayer";
+public class GameOverScreen extends ScreenAdapter {
 
     private final MomcilovicBattleshipGame game;
     private final AssetManager assetManager;
@@ -39,11 +35,7 @@ public class PreGameScreen extends ScreenAdapter {
     private Skin skin;
     private TextureAtlas gameplayAtlas;
 
-    private TextField player1Name;
-    private TextField player2Name;
-    private String[] players;
-
-    public PreGameScreen(MomcilovicBattleshipGame game) {
+    public GameOverScreen(MomcilovicBattleshipGame game) {
         this.game = game;
         assetManager = game.getAssetManager();
     }
@@ -55,8 +47,6 @@ public class PreGameScreen extends ScreenAdapter {
 
         skin = assetManager.get(AssetDescriptors.UI_SKIN);
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
-
-        players = new String[2];
 
         stage.addActor(createUi());
         Gdx.input.setInputProcessor(stage);
@@ -92,57 +82,61 @@ public class PreGameScreen extends ScreenAdapter {
         TextureRegion backgroundRegion = gameplayAtlas.findRegion(RegionNames.BACKGROUND);
         table.setBackground(new TextureRegionDrawable(backgroundRegion));
 
-        Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
-        boolean isMultiplayer = prefs.getBoolean(MULTIPLAYER_KEY, false);
+        // TextButton introButton = new TextButton("Intro screen", skin);
+        // introButton.addListener(new ClickListener() {
+        //     @Override
+        //     public void clicked(InputEvent event, float x, float y) {
+        //         game.setScreen(new IntroScreen(game));
+        //     }
+        // });
 
-        Label titleLabel = new Label("Pre-Game Setup", skin, "title");
-        table.add(titleLabel).colspan(2).center().padBottom(20).row();
+        TextButton playButton = new TextButton("Play", skin, "round");
+        playButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new PreGameScreen(game));
+            }
+        });
 
-        if (isMultiplayer) {
-            Label playerNameLabel = new Label("Player Name:", skin);
-            player1Name = new TextField("", skin);
-            table.add(playerNameLabel).left().padBottom(15).row();
-            table.add(player1Name).fillX().padBottom(15).row();
+        TextButton leaderboardButton = new TextButton("Leaderboard", skin, "round");
+        leaderboardButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new LeaderboardScreen(game));
+            }
+        });
 
+        TextButton settingsButton = new TextButton("Settings", skin, "round");
+        settingsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new SettingsScreen(game));
+            }
+        });
 
-        } else {
-            Label player1NameLabel = new Label("Player 1 Name:", skin);
-            player1Name = new TextField("", skin);
-            Label player2NameLabel = new Label("Player 2 Name:", skin);
-            player2Name = new TextField("", skin);
-            table.add(player1NameLabel).left().padBottom(15).row();
-            table.add(player1Name).fillX().padBottom(15).row();
-            table.add(player2NameLabel).left().padBottom(15).row();
-            table.add(player2Name).fillX().padBottom(15).row();
-
-        }
-
+        TextButton quitButton = new TextButton("Quit", skin, "round");
+        quitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
 
         Table buttonTable = new Table();
-        TextButton backButton = new TextButton("Back", skin, "round");
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MenuScreen(game));
-            }
-        });
-        buttonTable.add(backButton).padRight(10);
+        buttonTable.defaults().padLeft(30).padRight(30);
 
-        TextButton startButton = new TextButton("Start Game", skin, "round");
-        startButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Starting game with players: " + player1Name + " and " + player2Name);
-                //game.getGameManager().saveResult(player1Name.getText(), 0, player2Name.getText(), 0,isMultiplayer);
-                players[0] = player1Name.getText();
-                players[1] = player2Name.getText();
-                game.setScreen(new GameSetupScreen(game, players));
-            }
-        });
-        buttonTable.add(startButton).padLeft(10);
+        TextureRegion logoRegion = gameplayAtlas.findRegion(RegionNames.BATTLESHIP_LOGO);
+        Image logoImage = new Image(new TextureRegionDrawable(logoRegion));
 
-        table.add(buttonTable).colspan(2).center().padTop(20);
+        buttonTable.add(playButton).padBottom(15).expandX().fill().row();
+        buttonTable.add(leaderboardButton).padBottom(15).fillX().row();
+        buttonTable.add(settingsButton).padBottom(15).fillX().row();
+        buttonTable.add(quitButton).fillX();
 
+        buttonTable.center();
+
+        table.add(logoImage).padBottom(20).row();
+        table.add(buttonTable);
         table.center();
         table.setFillParent(true);
         table.pack();
