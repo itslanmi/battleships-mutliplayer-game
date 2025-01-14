@@ -153,7 +153,6 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void createUi() {
-        // Add background image
         Image backgroundImage = new Image(gameplayAtlas.findRegion(RegionNames.BACKGROUND));
         backgroundImage.setFillParent(true);
         stage.addActor(backgroundImage);

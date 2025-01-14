@@ -51,6 +51,8 @@ public class GameOverScreen extends ScreenAdapter {
         skin = assetManager.get(AssetDescriptors.UI_SKIN);
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
 
+        game.getGameManager().saveResult(players[0], (int) scores[0], players[1], (int) scores[1], true);
+
         stage.addActor(createUi());
         Gdx.input.setInputProcessor(stage);
     }
@@ -85,45 +87,44 @@ public class GameOverScreen extends ScreenAdapter {
         TextureRegionDrawable backgroundRegion = new TextureRegionDrawable(gameplayAtlas.findRegion(RegionNames.BACKGROUND));
         table.setBackground(backgroundRegion);
 
-        // Determine the winner
+
         int winnerIndex = scores[0] > scores[1] ? 0 : 1;
 
-        // Create labels for player 1
+
         Label player1NameLabel = new Label(players[0], skin, "title");
-        Label player1AccuracyLabel = new Label("Accuracy: " + accuracies[0] + "%", skin);
+        Label player1AccuracyLabel = new Label("Accuracy: " + Math.round(accuracies[0]) + "%", skin);
         Label player1ScoreLabel = new Label("Score: " + scores[0], skin);
 
-        // Create labels for player 2
+
         Label player2NameLabel = new Label(players[1], skin, "title");
-        Label player2AccuracyLabel = new Label("Accuracy: " + accuracies[1] + "%", skin);
+        Label player2AccuracyLabel = new Label("Accuracy: " + Math.round(accuracies[1]) + "%", skin);
         Label player2ScoreLabel = new Label("Score: " + scores[1], skin);
 
-        // Create winner label
-        Label winnerLabel = new Label("Winner: " + players[winnerIndex], skin, "title");
-        Label winnerScoreLabel = new Label("Score: " + scores[winnerIndex], skin);
 
-        // Add player 1 information to the table
+        Label winnerLabel = new Label("Winner", skin, "title");
+        Label winnerScoreLabel = new Label("Name: " + players[winnerIndex], skin);
+
+
         Table player1Table = new Table();
         player1Table.add(player1NameLabel).row();
         player1Table.add(player1AccuracyLabel).row();
         player1Table.add(player1ScoreLabel).row();
 
-        // Add player 2 information to the table
+
         Table player2Table = new Table();
         player2Table.add(player2NameLabel).row();
         player2Table.add(player2AccuracyLabel).row();
         player2Table.add(player2ScoreLabel).row();
 
-        // Add winner information to the table
+
         Table winnerTable = new Table();
         winnerTable.add(winnerLabel).row();
         winnerTable.add(winnerScoreLabel).row();
 
-        // Create buttons
+
         TextButton leaderboardButton = new TextButton("Leaderboard", skin, "round");
         TextButton mainMenuButton = new TextButton("Main Menu", skin, "round");
 
-        // Add listeners to buttons
         leaderboardButton.addListener(event -> {
             if (event.isHandled()) {
                 game.setScreen(new LeaderboardScreen(game));
@@ -140,7 +141,6 @@ public class GameOverScreen extends ScreenAdapter {
             return false;
         });
 
-        // Add player tables to the main table
         table.add(player1Table).expandX().fillX();
         table.add(player2Table).expandX().fillX();
         table.row();

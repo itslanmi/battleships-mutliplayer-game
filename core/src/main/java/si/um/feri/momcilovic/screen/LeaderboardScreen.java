@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -18,8 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import si.um.feri.momcilovic.GameManager;
 import si.um.feri.momcilovic.MomcilovicBattleshipGame;
@@ -39,11 +41,10 @@ public class LeaderboardScreen extends ScreenAdapter {
     private Skin skin;
     private TextureAtlas gameplayAtlas;
 
-
     public LeaderboardScreen(MomcilovicBattleshipGame game) {
         this.game = game;
-        assetManager = game.getAssetManager();
-        gameManager = game.getGameManager();
+        this.assetManager = game.getAssetManager();
+        this.gameManager = game.getGameManager();
     }
 
     @Override
@@ -81,8 +82,6 @@ public class LeaderboardScreen extends ScreenAdapter {
         stage.dispose();
     }
 
-
-
     private Actor createUi() {
         Table table = new Table();
         table.defaults().pad(20).width(600);
@@ -91,7 +90,6 @@ public class LeaderboardScreen extends ScreenAdapter {
         table.setBackground(new TextureRegionDrawable(backgroundRegion));
 
         TextButton backButton = new TextButton("Back", skin, "round");
-        backButton.defaults().width(200);
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -102,20 +100,25 @@ public class LeaderboardScreen extends ScreenAdapter {
         Table buttonTable = new Table();
         buttonTable.defaults().padLeft(30).padRight(30);
 
-
-
         Label titleLabel = new Label("Leaderboard", skin, "title");
         buttonTable.add(titleLabel).colspan(3).center().padBottom(20).row();
 
         Table leaderboardTable = new Table();
         leaderboardTable.defaults().pad(10);
 
-        for (int i = 0; i < gameManager.getGameResults().size(); i++) {
-            Label rankLabel = new Label(i + 1 + ".", skin, "default");
+        List<GameManager.GameResult> gameResults = gameManager.getGameResults();
+        List<PlayerScore> playerScores = new ArrayList<>();
+        for (GameManager.GameResult result : gameResults) {
+            playerScores.add(new PlayerScore(result.getPlayer(1), result.getScore(1)));
+            playerScores.add(new PlayerScore(result.getPlayer(2), result.getScore(2)));
+        }
 
-            Label playerLabel = new Label(gameManager.getGameResults().get(i).getPlayer(1), skin, "default");
+        playerScores.sort(Comparator.comparingInt(PlayerScore::getScore).reversed());
 
-            Label scoreLabel = new Label(Integer.toString(gameManager.getGameResults().get(i).getScore(1)), skin, "default");
+        for (int i = 0; i < playerScores.size(); i++) {
+            Label rankLabel = new Label((i + 1) + ".", skin, "default");
+            Label playerLabel = new Label(playerScores.get(i).getPlayer(), skin, "default");
+            Label scoreLabel = new Label(Integer.toString(playerScores.get(i).getScore()), skin, "default");
 
             leaderboardTable.add(rankLabel).left().padRight(10);
             leaderboardTable.add(playerLabel).expandX().fillX().padRight(10);
@@ -136,5 +139,23 @@ public class LeaderboardScreen extends ScreenAdapter {
         table.pack();
 
         return table;
+    }
+
+    private static class PlayerScore {
+        private final String player;
+        private final int score;
+
+        public PlayerScore(String player, int score) {
+            this.player = player;
+            this.score = score;
+        }
+
+        public String getPlayer() {
+            return player;
+        }
+
+        public int getScore() {
+            return score;
+        }
     }
 }
