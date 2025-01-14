@@ -261,7 +261,7 @@ public class GameSetupScreen extends ScreenAdapter {
 
         // Create and position player name label
         playerNameLabel = new Label(players[currentPlayer - 1], skin, "title");
-        playerNameLabel.setPosition(10 * GameConfig.CELL_SIZE, GameConfig.HUD_HEIGHT - GameConfig.CELL_SIZE);
+        playerNameLabel.setPosition(10 * GameConfig.CELL_SIZE, GameConfig.HUD_HEIGHT - GameConfig.CELL_SIZE - 10);
         stage.addActor(playerNameLabel);
 
 

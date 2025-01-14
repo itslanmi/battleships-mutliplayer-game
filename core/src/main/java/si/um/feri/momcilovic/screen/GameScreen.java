@@ -27,6 +27,7 @@ public class GameScreen extends ScreenAdapter {
 
     private static final String PREFS_NAME = "settingsPreferences";
     private static final String MOVE_TIME_KEY = "moveTime";
+    private static Boolean isClickEnabled = true;
     private final MomcilovicBattleshipGame game;
     private final AssetManager assetManager;
     private final GameManager gameManager;
@@ -41,6 +42,9 @@ public class GameScreen extends ScreenAdapter {
     private String[] players;
     private int[] playersHealth = {17, 17};
     private int[] playersShots = {0, 0};
+    private float[] playersScores = {0, 0};
+    private float[] accuracies = {0, 0};
+    private long turnStartTime;
 
     private int[][] player1Matrix = new int[10][10];
     private int[][] player2Matrix = new int[10][10];
@@ -52,9 +56,9 @@ public class GameScreen extends ScreenAdapter {
     private Label timerLabel;
     private Label shotsLabel;
     private Label accuracyLabel;
+    private Label scoreLabel;
     private float timer;
     private float turnDuration;
-    private String turnDurationString;
 
     public GameScreen(MomcilovicBattleshipGame game, String[] playersNames, int player1[][], int player2[][]) {
         this.game = game;
@@ -73,9 +77,8 @@ public class GameScreen extends ScreenAdapter {
         skin = assetManager.get(AssetDescriptors.UI_SKIN);
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
 
-
         Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
-        turnDurationString = prefs.getString(MOVE_TIME_KEY, "MEDIUM (30s)"); // Default to 30 seconds if not set
+        String turnDurationString = prefs.getString(MOVE_TIME_KEY, "MEDIUM (30s)"); // Default to 30 seconds if not set
         switch (turnDurationString) {
             case "HARD (10s)":
                 turnDuration = 10;
@@ -88,6 +91,7 @@ public class GameScreen extends ScreenAdapter {
                 break;
         }
         timer = turnDuration;
+        turnStartTime = System.currentTimeMillis();
 
         createUi();
         Gdx.input.setInputProcessor(stage);
@@ -98,7 +102,12 @@ public class GameScreen extends ScreenAdapter {
         ScreenUtils.clear(0f, 0f, 0f, 0f);
 
         if (playersHealth[0] == 0 || playersHealth[1] == 0) {
-            game.setScreen(new GameOverScreen(game));
+            if(playersHealth[0] == 0){
+                playersScores[1] += 1000;
+            }else {
+                playersScores[0] += 1000;
+            }
+            game.setScreen(new GameOverScreen(game, players, accuracies, playersScores));
         }
 
         updateTimer(delta);
@@ -117,10 +126,11 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-
     private void switchTurn() {
         currentPlayer = 3 - currentPlayer; // Switch player
         timer = turnDuration;
+        turnStartTime = System.currentTimeMillis();
+        isClickEnabled = true;
         updateGridImages();
     }
 
@@ -136,8 +146,10 @@ public class GameScreen extends ScreenAdapter {
         if (playersShots[currentPlayer - 1] == 0) {
             accuracyLabel.setText("Accuracy: \n" + 0 + "%");
         } else {
-            accuracyLabel.setText("Accuracy: \n" + ((17 - playersHealth[3 - currentPlayer - 1]) * 100 / playersShots[currentPlayer - 1]) + "%");
+            accuracies[currentPlayer - 1] = ((17 - playersHealth[3 - currentPlayer - 1]) * 100.0f) / playersShots[currentPlayer - 1];
+            accuracyLabel.setText("Accuracy: \n" + Math.round(accuracies[currentPlayer - 1]) + "%");
         }
+        scoreLabel.setText("Score: \n" + playersScores[currentPlayer - 1]);
     }
 
     private void createUi() {
@@ -180,7 +192,7 @@ public class GameScreen extends ScreenAdapter {
                 gridImage.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        if ((currentPlayer == 1 && player2GridState[finalI][finalJ]) || (currentPlayer == 2 && player1GridState[finalI][finalJ])) {
+                        if ((currentPlayer == 1 && player2GridState[finalI][finalJ]) || (currentPlayer == 2 && player1GridState[finalI][finalJ]) || !isClickEnabled) {
                             return;
                         }
                         gridImage.getColor().a = 1; // Set alpha to 1 (100%) on click
@@ -192,7 +204,9 @@ public class GameScreen extends ScreenAdapter {
                         playersShots[currentPlayer - 1]++;
                         if (Objects.equals(gridImage.getName(), "GRID_HIT")) {
                             playersHealth[3 - currentPlayer - 1]--;
+                            updateScore();
                         }
+                        //isClickEnabled = false;
                         timer = 2;
                         System.out.println("Player " + players[3 - currentPlayer - 1] + "," + playersHealth[3 - currentPlayer - 1] + " health left");
                     }
@@ -201,10 +215,9 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-
         // Create and position player name label
         playerNameLabel = new Label(players[currentPlayer - 1], skin, "title");
-        playerNameLabel.setPosition(10 * GameConfig.CELL_SIZE, GameConfig.HUD_HEIGHT - GameConfig.CELL_SIZE);
+        playerNameLabel.setPosition(10 * GameConfig.CELL_SIZE, GameConfig.HUD_HEIGHT - GameConfig.CELL_SIZE - 10);
         stage.addActor(playerNameLabel);
 
         // Create and position timer label
@@ -212,18 +225,31 @@ public class GameScreen extends ScreenAdapter {
         timerLabel.setPosition(GameConfig.CELL_SIZE, 11 * GameConfig.CELL_SIZE);
         stage.addActor(timerLabel);
 
-        // Create and position timer label
+        // Create and position shots label
         shotsLabel = new Label("Shots: \n" + playersShots[currentPlayer - 1], skin);
         shotsLabel.setPosition(GameConfig.CELL_SIZE, 9 * GameConfig.CELL_SIZE);
         stage.addActor(shotsLabel);
 
-        // Create and position timer label
+        // Create and position accuracy label
         if (playersShots[currentPlayer - 1] == 0) {
             accuracyLabel = new Label("Accuracy: \n" + 0 + "%", skin);
         } else {
-            accuracyLabel = new Label("Accuracy: \n" + ((17 - playersHealth[3 - currentPlayer - 1]) * 100 / playersShots[currentPlayer - 1])  + "%", skin);
+            accuracyLabel = new Label("Accuracy: \n" + ((17 - playersHealth[3 - currentPlayer - 1]) * 100 / playersShots[currentPlayer - 1]) + "%", skin);
         }
         accuracyLabel.setPosition(GameConfig.CELL_SIZE, 7 * GameConfig.CELL_SIZE);
         stage.addActor(accuracyLabel);
+
+        // Create and position score label
+        scoreLabel = new Label("Score: \n" + playersScores[currentPlayer - 1], skin);
+        scoreLabel.setPosition(GameConfig.CELL_SIZE, 5 * GameConfig.CELL_SIZE);
+        stage.addActor(scoreLabel);
+    }
+
+    private void updateScore() {
+        long currentTime = System.currentTimeMillis();
+        long timeTaken = currentTime - turnStartTime;
+        float accuracy = playersShots[currentPlayer - 1] == 0 ? 0 : (float) ((17 - playersHealth[3 - currentPlayer - 1]) * 100) / playersShots[currentPlayer - 1];
+        float score = (turnDuration * 1000 - timeTaken) * (accuracy / 1000.0f);
+        playersScores[currentPlayer - 1] += Math.round(score);
     }
 }

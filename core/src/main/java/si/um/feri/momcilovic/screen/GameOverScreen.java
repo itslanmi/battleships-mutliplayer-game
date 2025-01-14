@@ -4,19 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import si.um.feri.momcilovic.MomcilovicBattleshipGame;
@@ -35,8 +31,15 @@ public class GameOverScreen extends ScreenAdapter {
     private Skin skin;
     private TextureAtlas gameplayAtlas;
 
-    public GameOverScreen(MomcilovicBattleshipGame game) {
+    private String[] players;
+    private float[] accuracies;
+    private float[] scores;
+
+    public GameOverScreen(MomcilovicBattleshipGame game, String[] players, float[] accuracies, float[] scores) {
         this.game = game;
+        this.players = players;
+        this.accuracies = accuracies;
+        this.scores = scores;
         assetManager = game.getAssetManager();
     }
 
@@ -79,65 +82,74 @@ public class GameOverScreen extends ScreenAdapter {
         Table table = new Table();
         table.defaults().pad(20);
 
-        TextureRegion backgroundRegion = gameplayAtlas.findRegion(RegionNames.BACKGROUND);
-        table.setBackground(new TextureRegionDrawable(backgroundRegion));
+        TextureRegionDrawable backgroundRegion = new TextureRegionDrawable(gameplayAtlas.findRegion(RegionNames.BACKGROUND));
+        table.setBackground(backgroundRegion);
 
-        // TextButton introButton = new TextButton("Intro screen", skin);
-        // introButton.addListener(new ClickListener() {
-        //     @Override
-        //     public void clicked(InputEvent event, float x, float y) {
-        //         game.setScreen(new IntroScreen(game));
-        //     }
-        // });
+        // Determine the winner
+        int winnerIndex = scores[0] > scores[1] ? 0 : 1;
 
-        TextButton playButton = new TextButton("Play", skin, "round");
-        playButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PreGameScreen(game));
-            }
-        });
+        // Create labels for player 1
+        Label player1NameLabel = new Label(players[0], skin, "title");
+        Label player1AccuracyLabel = new Label("Accuracy: " + accuracies[0] + "%", skin);
+        Label player1ScoreLabel = new Label("Score: " + scores[0], skin);
 
+        // Create labels for player 2
+        Label player2NameLabel = new Label(players[1], skin, "title");
+        Label player2AccuracyLabel = new Label("Accuracy: " + accuracies[1] + "%", skin);
+        Label player2ScoreLabel = new Label("Score: " + scores[1], skin);
+
+        // Create winner label
+        Label winnerLabel = new Label("Winner: " + players[winnerIndex], skin, "title");
+        Label winnerScoreLabel = new Label("Score: " + scores[winnerIndex], skin);
+
+        // Add player 1 information to the table
+        Table player1Table = new Table();
+        player1Table.add(player1NameLabel).row();
+        player1Table.add(player1AccuracyLabel).row();
+        player1Table.add(player1ScoreLabel).row();
+
+        // Add player 2 information to the table
+        Table player2Table = new Table();
+        player2Table.add(player2NameLabel).row();
+        player2Table.add(player2AccuracyLabel).row();
+        player2Table.add(player2ScoreLabel).row();
+
+        // Add winner information to the table
+        Table winnerTable = new Table();
+        winnerTable.add(winnerLabel).row();
+        winnerTable.add(winnerScoreLabel).row();
+
+        // Create buttons
         TextButton leaderboardButton = new TextButton("Leaderboard", skin, "round");
-        leaderboardButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
+        TextButton mainMenuButton = new TextButton("Main Menu", skin, "round");
+
+        // Add listeners to buttons
+        leaderboardButton.addListener(event -> {
+            if (event.isHandled()) {
                 game.setScreen(new LeaderboardScreen(game));
+                return true;
             }
+            return false;
         });
 
-        TextButton settingsButton = new TextButton("Settings", skin, "round");
-        settingsButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new SettingsScreen(game));
+        mainMenuButton.addListener(event -> {
+            if (event.isHandled()) {
+                game.setScreen(new MenuScreen(game));
+                return true;
             }
+            return false;
         });
 
-        TextButton quitButton = new TextButton("Quit", skin, "round");
-        quitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
-            }
-        });
+        // Add player tables to the main table
+        table.add(player1Table).expandX().fillX();
+        table.add(player2Table).expandX().fillX();
+        table.row();
+        table.add(winnerTable).colspan(2).center();
+        table.row();
+        table.add(leaderboardButton).colspan(2).center().padTop(20);
+        table.row();
+        table.add(mainMenuButton).colspan(2).center().padTop(10);
 
-        Table buttonTable = new Table();
-        buttonTable.defaults().padLeft(30).padRight(30);
-
-        TextureRegion logoRegion = gameplayAtlas.findRegion(RegionNames.BATTLESHIP_LOGO);
-        Image logoImage = new Image(new TextureRegionDrawable(logoRegion));
-
-        buttonTable.add(playButton).padBottom(15).expandX().fill().row();
-        buttonTable.add(leaderboardButton).padBottom(15).fillX().row();
-        buttonTable.add(settingsButton).padBottom(15).fillX().row();
-        buttonTable.add(quitButton).fillX();
-
-        buttonTable.center();
-
-        table.add(logoImage).padBottom(20).row();
-        table.add(buttonTable);
-        table.center();
         table.setFillParent(true);
         table.pack();
 
