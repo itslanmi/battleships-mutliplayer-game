@@ -1,64 +1,60 @@
-# Battleship - Opis igre
+# 🚢 Battleship - The Ultimate Naval Battle! 🎯
 
-## Dinamika igre
-Battleship je strateška igra, kjer dva igralca izmenično streljata na nasprotnikovo igralno polje, dokler eden ne potopi vseh ladij nasprotnika. V igri, ki jo razvijam, bo igralec:
-- Na voljo imel dve igralni polji: svoje in nasprotnikovo.
-- Postavil svoje ladje na igralno polje (ročno postavljanje ali naključno generirano).
-- Klikal na nasprotnikovo igralno polje, da izvede napad.
-
-Zmagovalec bo tisti, ki prvi potopi vse ladje nasprotnika.
-
-## Mehanika igre
-### Osnovna pravila
-1. Igralno polje je mreža velikosti n x n (standardna velikost je 10x10).
-2. Ladje so različnih velikosti in oblik (npr. 1x1, 1x2, 1x3).
-3. Ladje se ne smejo prekrivati.
-4. Na vsakem potezu igralec klikne na eno polje na nasprotnikovi mreži:
-    - Če zadene ladjo, je zadetek označen.
-    - Če zgreši, je označeno prazno polje.
-
-### Klik in odziv
-- Klik na polje sproži logiko preverjanja zadetka.
-- Če je ladja zadeta, se sproži vizualni efekt (npr. eksplozija).
-- Po vsaki potezi se preveri, ali so vse ladje potopljene.
-
-### Končni cilj
-- Cilj igre je potopiti vse ladje nasprotnika pred njim.
-
-## Elementi igre
-### Igralno polje
-- Dve ločeni mreži:
-    1. **Lastno igralno polje**: Prikazuje položaj igralčevih ladij.
-    2. **Nasprotnikovo igralno polje**: Polje, kjer igralec cilja ladje nasprotnika.
-
-### Ladje
-- Ladje bodo prikazane kot pravokotne ali kvadratne oblike na mreži:
-    - **Letalonosilka** (5 polj)
-    - **Bojna ladja** (4 polja)
-    - **Podmornica** (3 polja)
-    - **Rušilec** (2 polja)
-    - **Patruljni čoln** (1 polje)
-
-### Uporabniški vmesnik
-- Gumbi za:
-    - **Postavi ladje**: Ročno ali naključno.
-    - **Začni igro**: Začetek igre po postavitvi ladij.
-    - **Ponovni zagon**: Začeti novo igro.
-
-### Vizualni elementi
-- **Eksplozije** za zadetke.
-- **Valovi** ali **dim** za zgrešene strele.
-- Oznake za zadetke in zgrešene strele na mreži.
-
-### Zvok
-- Zvočni učinki za zadetke, zgrešene strele in zmago/poraz.
+Ahoy, Captain! ⚓ Welcome to **Battleship**, the classic strategy game where you engage in an intense duel on the high seas! 🌊 Fire your shots, sink enemy ships, and claim victory! 🏆
 
 ---
 
-## Načrt za razvoj
-1. **Osnovna mreža**: Implementacija dveh igralnih polj.
-2. **Interakcija**: Klik na polja in odziv na zadetke/zgrešene strele.
-3. **Logika igre**: Preverjanje pravil in pogojev za zmago.
-4. **Vizualni efekti**: Dodajanje animacij in zvoka.
-5. **Uporabniški vmesnik**: Gumbi, nastavitve in ponovni zagon igre.
+## 🎮 How the Game Works
+Battleship is a **turn-based strategy game** where two players take turns firing at each other’s fleet. The first to **sink all enemy ships** wins the battle! 💥
 
+### 🛠️ Game Mechanics
+- You get **two grids**: one for your fleet and one for attacking the enemy. 📍
+- Place your ships **manually** or let the game **randomly position them**. 🚢📌
+- Click on the enemy grid to fire your shots! 🎯
+- If you hit a ship, the spot will be **marked**! If you miss, it’ll be **indicated** too. ❌✅
+- Keep firing until one fleet is **completely destroyed**! 🔥
+
+---
+
+## 📜 Game Rules
+### 📏 Battlefield Setup
+✅ The board is a **10x10 grid** (default size).  
+✅ Ships come in different sizes and shapes (e.g., 1x1, 1x2, 1x3).  
+✅ Ships **can’t overlap**.  
+
+### 🎯 Turn-Based Combat
+1️⃣ Players take turns clicking a tile on the enemy grid.  
+2️⃣ A **hit** is marked, and the ship takes damage.  
+3️⃣ A **miss** is also marked, so you know where not to aim again.  
+4️⃣ The game continues until **one player loses all their ships**. 🚢💀
+
+---
+
+## 🏗️ Game Elements
+### 🌊 The Battlefield
+- **Your Board**: Displays your own ships.
+- **Enemy Board**: Where you fire shots to **find and sink** enemy ships!
+
+### 🚢 The Fleet
+Your armada consists of:
+- **🛩️ Aircraft Carrier** (5 tiles)
+- **🚢 Battleship** (4 tiles)
+- **🤿 Submarine** (3 tiles)
+- **⚓ Destroyer** (2 tiles)
+- **🛶 Patrol Boat** (1 tile)
+
+### 🖥️ User Interface
+- **Place Ships** (manual/random)
+- **Start Game** ⚔️
+- **Restart Game** 🔄
+
+### 🔥 Visual & Audio Effects
+- **Explosions** for hits! 💥
+- **Waves & smoke** for missed shots! 🌊💨
+- **Epic sound effects** for hits, misses, and victory/defeat! 🔊🎶
+
+⏳ The battle is near... Are you ready to command your fleet? ⚔️🚢
+
+---
+
+🔥 **May the best admiral win!** 🏆
