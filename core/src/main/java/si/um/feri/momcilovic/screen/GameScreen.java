@@ -108,6 +108,7 @@ public class GameScreen extends ScreenAdapter {
                 playersScores[0] += 1000;
             }
             game.setScreen(new GameOverScreen(game, players, accuracies, playersScores));
+            return;
         }
 
         updateTimer(delta);

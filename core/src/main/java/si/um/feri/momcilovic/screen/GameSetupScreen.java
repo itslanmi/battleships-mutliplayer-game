@@ -14,8 +14,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import org.intellij.lang.annotations.JdkConstants;
-
 import java.util.Arrays;
 
 import si.um.feri.momcilovic.GameManager;
@@ -23,6 +21,7 @@ import si.um.feri.momcilovic.MomcilovicBattleshipGame;
 import si.um.feri.momcilovic.assets.AssetDescriptors;
 import si.um.feri.momcilovic.assets.RegionNames;
 import si.um.feri.momcilovic.config.GameConfig;
+import si.um.feri.momcilovic.net.NetSession;
 
 public class GameSetupScreen extends ScreenAdapter {
 
@@ -41,6 +40,9 @@ public class GameSetupScreen extends ScreenAdapter {
     private boolean isHorizontal = true;
     private int currentPlayer = 1;
     private final String[] players;
+    private final NetSession session; // null = hot-seat game on one PC
+    private boolean waitingForOpponent = false;
+    private boolean opponentReady = false;
 
     private Image[] boatImages;
     private final String[] boats = {RegionNames.GRID_BATTLESHIP, RegionNames.GRID_CRUISER, RegionNames.GRID_DESTROYER, RegionNames.GRID_SUBMARINE, RegionNames.GRID_PATROL};
@@ -66,6 +68,16 @@ public class GameSetupScreen extends ScreenAdapter {
         assetManager = game.getAssetManager();
         gameManager = game.getGameManager();
         players = playersNames;
+        session = null;
+    }
+
+    /** LAN game: only the local player places ships. */
+    public GameSetupScreen(MomcilovicBattleshipGame game, NetSession session) {
+        this.game = game;
+        assetManager = game.getAssetManager();
+        gameManager = game.getGameManager();
+        players = new String[]{session.localName, session.remoteName};
+        this.session = session;
     }
 
     @Override
@@ -98,7 +110,12 @@ public class GameSetupScreen extends ScreenAdapter {
     public void render(float delta) {
         ScreenUtils.clear(0f, 0f, 0f, 0f);
 
-        handleInput();
+        if (session != null && !pollNetwork()) {
+            return;
+        }
+        if (!waitingForOpponent) {
+            handleInput();
+        }
         updateUi();
         stage.act(delta);
         stage.draw();
@@ -172,12 +189,22 @@ public class GameSetupScreen extends ScreenAdapter {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             try {
-                if (currentPlayer == 1) {
-                    placeBoatInMatrix(player1Matrix, selectedRow, selectedCol, isHorizontal, (int) (boatImages[currentBoatIndex].getImageWidth() / GameConfig.CELL_SIZE));
-                } else {
-                    placeBoatInMatrix(player2Matrix, selectedRow, selectedCol, isHorizontal, (int) (boatImages[currentBoatIndex].getImageWidth() / GameConfig.CELL_SIZE));
-                }
+                Image boat = boatImages[currentBoatIndex];
+                int boatSize = (int) (boat.getImageWidth() / GameConfig.CELL_SIZE);
+                // derive the cell from where the boat actually is on screen
+                int col = Math.round(boat.getX() / cellSize) - 5;
+                int row = (isHorizontal ? 11 : 12) - Math.round(boat.getY() / cellSize);
+                placeBoatInMatrix(currentPlayer == 1 ? player1Matrix : player2Matrix, row, col, isHorizontal, boatSize);
+                selectedRow = row;
+                selectedCol = col;
                 entersPressed++;
+                if (session != null) {
+                    session.placements.add(new NetSession.Placement(boats[currentBoatIndex], row, col, isHorizontal, boatSize));
+                    if (entersPressed == boats.length) {
+                        finishNetPlacement();
+                        return;
+                    }
+                }
                 placeBoat();
                 isHorizontal = true;
                 selectedCol = 0;
@@ -187,7 +214,7 @@ public class GameSetupScreen extends ScreenAdapter {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-            if (entersPressed == 10) {
+            if (session == null && entersPressed == 10) {
                 game.setScreen(new GameScreen(game, players, player1Matrix, player2Matrix));
             }
         }
@@ -216,6 +243,11 @@ public class GameSetupScreen extends ScreenAdapter {
     }
 
     public void placeBoatInMatrix(int[][] matrix, int selectedRow, int selectedCol, boolean isHorizontal, int boatSize) throws Exception {
+        int lastRow = isHorizontal ? selectedRow : selectedRow + boatSize - 1;
+        int lastCol = isHorizontal ? selectedCol + boatSize - 1 : selectedCol;
+        if (selectedRow < 0 || selectedCol < 0 || lastRow > 9 || lastCol > 9) {
+            throw new Exception("Invalid placement");
+        }
         if (isHorizontal) {
             for (int i = 0; i < boatSize; i++) {
                 if (matrix[selectedRow][selectedCol + i] == 1) {
@@ -237,9 +269,41 @@ public class GameSetupScreen extends ScreenAdapter {
         }
     }
 
+    private void finishNetPlacement() {
+        session.buildFleet();
+        waitingForOpponent = true;
+        session.connection.send("READY");
+        if (opponentReady) {
+            startNetGame();
+        }
+    }
+
+    private void startNetGame() {
+        game.setScreen(new NetGameScreen(game, session));
+    }
+
+    /** @return false if the screen was changed and the frame should end. */
+    private boolean pollNetwork() {
+        String line;
+        while ((line = session.connection.poll()) != null) {
+            if ("READY".equals(line)) {
+                opponentReady = true;
+                if (waitingForOpponent) {
+                    startNetGame();
+                    return false; // keep remaining messages for the game screen
+                }
+            } else if ("LEAVE".equals(line)) {
+                session.close();
+                game.setScreen(new MenuScreen(game));
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void updateUi() {
         playerNameLabel.setText(players[currentPlayer - 1]);
-        boatInfoLabel.setText("Boat: " + boats[currentBoatIndex]);
+        boatInfoLabel.setText(waitingForOpponent ? "Waiting for\nopponent..." : "Boat: " + boats[currentBoatIndex]);
         orientationLabel.setText("Orientation: " + (isHorizontal ? "Horizontal" : "Vertical"));
     }
 

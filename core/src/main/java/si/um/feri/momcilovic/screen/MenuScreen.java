@@ -94,7 +94,8 @@ public class MenuScreen extends ScreenAdapter {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PreGameScreen(game));
+                boolean lan = Gdx.app.getPreferences("settingsPreferences").getBoolean("multiplayer", false);
+                game.setScreen(lan ? new LanLobbyScreen(game) : new PreGameScreen(game));
             }
         });
 

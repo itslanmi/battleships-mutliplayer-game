@@ -92,31 +92,17 @@ public class PreGameScreen extends ScreenAdapter {
         TextureRegion backgroundRegion = gameplayAtlas.findRegion(RegionNames.BACKGROUND);
         table.setBackground(new TextureRegionDrawable(backgroundRegion));
 
-        Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
-        boolean isMultiplayer = prefs.getBoolean(MULTIPLAYER_KEY, false);
-
         Label titleLabel = new Label("Pre-Game Setup", skin, "title");
         table.add(titleLabel).colspan(2).center().padBottom(20).row();
 
-        if (isMultiplayer) {
-            Label playerNameLabel = new Label("Player Name:", skin);
-            player1Name = new TextField("", skin);
-            table.add(playerNameLabel).left().padBottom(15).row();
-            table.add(player1Name).fillX().padBottom(15).row();
-
-
-        } else {
-            Label player1NameLabel = new Label("Player 1 Name:", skin);
-            player1Name = new TextField("", skin);
-            Label player2NameLabel = new Label("Player 2 Name:", skin);
-            player2Name = new TextField("", skin);
-            table.add(player1NameLabel).left().padBottom(15).row();
-            table.add(player1Name).fillX().padBottom(15).row();
-            table.add(player2NameLabel).left().padBottom(15).row();
-            table.add(player2Name).fillX().padBottom(15).row();
-
-        }
-
+        Label player1NameLabel = new Label("Player 1 Name:", skin);
+        player1Name = new TextField("", skin);
+        Label player2NameLabel = new Label("Player 2 Name:", skin);
+        player2Name = new TextField("", skin);
+        table.add(player1NameLabel).left().padBottom(15).row();
+        table.add(player1Name).fillX().padBottom(15).row();
+        table.add(player2NameLabel).left().padBottom(15).row();
+        table.add(player2Name).fillX().padBottom(15).row();
 
         Table buttonTable = new Table();
         TextButton backButton = new TextButton("Back", skin, "round");
@@ -132,8 +118,6 @@ public class PreGameScreen extends ScreenAdapter {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Starting game with players: " + player1Name + " and " + player2Name);
-                //game.getGameManager().saveResult(player1Name.getText(), 0, player2Name.getText(), 0,isMultiplayer);
                 players[0] = player1Name.getText();
                 players[1] = player2Name.getText();
                 game.setScreen(new GameSetupScreen(game, players));

@@ -9,7 +9,7 @@ Battleship is a **turn-based strategy game** where two players take turns firing
 
 ### 🛠️ Game Mechanics
 - You get **two grids**: one for your fleet and one for attacking the enemy. 📍
-- Place your ships **manually** or let the game **randomly position them**. 🚢📌
+- Place your ships **manually** with the keyboard. 🚢📌
 - Click on the enemy grid to fire your shots! 🎯
 - If you hit a ship, the spot will be **marked**! If you miss, it’ll be **indicated** too. ❌✅
 - Keep firing until one fleet is **completely destroyed**! 🔥
@@ -36,22 +36,29 @@ Battleship is a **turn-based strategy game** where two players take turns firing
 - **Enemy Board**: Where you fire shots to **find and sink** enemy ships!
 
 ### 🚢 The Fleet
-Your armada consists of:
-- **🛩️ Aircraft Carrier** (5 tiles)
-- **🚢 Battleship** (4 tiles)
-- **🤿 Submarine** (3 tiles)
-- **⚓ Destroyer** (2 tiles)
-- **🛶 Patrol Boat** (1 tile)
+Your armada consists of 5 ships (17 tiles in total): sizes **5, 4, 3, 3 and 2**.
 
-### 🖥️ User Interface
-- **Place Ships** (manual/random)
-- **Start Game** ⚔️
-- **Restart Game** 🔄
+### 🖥️ Controls
+- **Placing ships:** arrow keys move the ship, **R** rotates it, **ENTER** confirms it.
+- **Firing:** click a tile on the enemy grid.
+- **LAN game:** hold **TAB** to look at your own fleet.
 
-### 🔥 Visual & Audio Effects
-- **Explosions** for hits! 💥
-- **Waves & smoke** for missed shots! 🌊💨
-- **Epic sound effects** for hits, misses, and victory/defeat! 🔊🎶
+---
+
+## 🌐 Playing over LAN (two PCs on the same network)
+1. On both PCs: **Settings → turn on "Play over LAN"** → Back.
+2. **Play** opens the LAN lobby. Enter your name.
+3. One player types a game name and presses **Host**.
+4. The other player sees the game in the list (type in the **search box** to filter by game name or host name) and clicks it. If your network blocks discovery, type the host's IP in **Or by IP** and press Join.
+5. Each player places their own fleet. The host fires first. A **hit** gives you another shot, a **miss** passes the turn, and the move timer from Settings applies.
+6. Each PC only knows its own ships, so there is no peeking.
+
+**Firewall:** allow Java through the Windows firewall on *private* networks (UDP port 45454 for discovery, TCP port 45455 for the game).
+
+## ▶️ Running
+```
+./gradlew lwjgl3:run
+```
 
 ⏳ The battle is near... Are you ready to command your fleet? ⚔️🚢
 

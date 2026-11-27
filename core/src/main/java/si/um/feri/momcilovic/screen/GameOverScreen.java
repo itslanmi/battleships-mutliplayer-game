@@ -5,11 +5,13 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -34,12 +36,21 @@ public class GameOverScreen extends ScreenAdapter {
     private String[] players;
     private float[] accuracies;
     private float[] scores;
+    private final boolean lan;
+    private final int lanWinner;
 
     public GameOverScreen(MomcilovicBattleshipGame game, String[] players, float[] accuracies, float[] scores) {
+        this(game, players, accuracies, scores, false, -1);
+    }
+
+    /** lan games pass the real winner (who sank the whole fleet). */
+    public GameOverScreen(MomcilovicBattleshipGame game, String[] players, float[] accuracies, float[] scores, boolean lan, int lanWinner) {
         this.game = game;
         this.players = players;
         this.accuracies = accuracies;
         this.scores = scores;
+        this.lan = lan;
+        this.lanWinner = lanWinner;
         assetManager = game.getAssetManager();
     }
 
@@ -51,7 +62,7 @@ public class GameOverScreen extends ScreenAdapter {
         skin = assetManager.get(AssetDescriptors.UI_SKIN);
         gameplayAtlas = assetManager.get(AssetDescriptors.GAMEPLAY);
 
-        game.getGameManager().saveResult(players[0], (int) scores[0], players[1], (int) scores[1], true);
+        game.getGameManager().saveResult(players[0], (int) scores[0], players[1], (int) scores[1], !lan);
 
         stage.addActor(createUi());
         Gdx.input.setInputProcessor(stage);
@@ -88,7 +99,7 @@ public class GameOverScreen extends ScreenAdapter {
         table.setBackground(backgroundRegion);
 
 
-        int winnerIndex = scores[0] > scores[1] ? 0 : 1;
+        int winnerIndex = lan ? lanWinner : (scores[0] > scores[1] ? 0 : 1);
 
 
         Label player1NameLabel = new Label(players[0], skin, "title");
@@ -125,20 +136,18 @@ public class GameOverScreen extends ScreenAdapter {
         TextButton leaderboardButton = new TextButton("Leaderboard", skin, "round");
         TextButton mainMenuButton = new TextButton("Main Menu", skin, "round");
 
-        leaderboardButton.addListener(event -> {
-            if (event.isHandled()) {
+        leaderboardButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new LeaderboardScreen(game));
-                return true;
             }
-            return false;
         });
 
-        mainMenuButton.addListener(event -> {
-            if (event.isHandled()) {
+        mainMenuButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MenuScreen(game));
-                return true;
             }
-            return false;
         });
 
         table.add(player1Table).expandX().fillX();

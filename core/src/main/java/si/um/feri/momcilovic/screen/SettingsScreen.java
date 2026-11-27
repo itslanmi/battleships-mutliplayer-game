@@ -113,7 +113,7 @@ public class SettingsScreen extends ScreenAdapter {
         moveTimeSelectBox.setItems("HARD (10s)", "MEDIUM (30s)", "EASY (60s)");
         table.add(moveTimeSelectBox).fillX().padBottom(15).row();
 
-        multiplayerCheckbox = new CheckBox(" Multiplayer (LAN)", skin, "switch");
+        multiplayerCheckbox = new CheckBox(" Play over LAN (2 PCs)", skin, "switch");
         table.add(multiplayerCheckbox).left().padBottom(15).row();
 
         TextButton backButton = new TextButton("Back", skin, "round");
